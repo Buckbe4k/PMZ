@@ -1,0 +1,66 @@
+//Nezapomenout na stavový automat
+#include "stm8s.h"
+#include "milis.h"
+#include "keypad.h"
+
+
+
+
+void main(void){
+CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
+keypad_init();
+
+
+  while (1){
+		process_keypad();
+	}
+}
+
+void process_keypad(void){
+static uint8_t minule_stisknuto= 0;	// uklidíme poslední stav klávesnice (zde "volno")
+static uint16_t last_time=0; 
+uint8_t stisknuto;
+
+	if(milis()-last_time > 20){ // každých 20ms ...
+		last_time = milis();
+		stisknuto=keypad_scan(); // ... skenujeme klávesnici
+		if(minule_stisknuto == 0 && stisknuto != 0){ // pokud byla minule uvoln?n? a te? je n?co stisknuto
+			minule_stisknuto = stisknuto;
+			// zachytili jsme stisk kl?vesy - můžeme na to zareagovat
+			// pro demonstraci ji vypíšu na displej
+			sprintf(text,"%2u",stisknuto);
+			lcd_gotoxy(0,0);
+			lcd_puts(text);
+			
+		// v knihovně nastavím co znamená jaký tlačítko a pak třeba
+		// if stisknuto==1{tak se něco udělá}
+			
+		}
+		if(stisknuto == 0){minule_stisknuto= 0;}
+	}
+}
+
+
+
+
+// pod tímto komentářem nic neměňte 
+#ifdef USE_FULL_ASSERT
+
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *   where the assert_param error has occurred.
+  * @param file: pointer to the source file name
+  * @param line: assert_param error line source number
+  * @retval : None
+  */
+void assert_failed(u8* file, u32 line)
+{ 
+  /* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+
+  /* Infinite loop */
+  while (1)
+  {
+  }
+}
+#endif
