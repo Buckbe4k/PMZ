@@ -1,3 +1,9 @@
+GPIO_Init(GPIOE,GPIO_PIN_2,GPIO_MODE_IN_FL_NO_IT); //CLK
+GPIO_Init(GPIOE,GPIO_PIN_1,GPIO_MODE_IN_FL_NO_IT); //DT
+GPIO_Init(GPIOC,GPIO_PIN_5,GPIO_MODE_IN_FL_NO_IT); //SW
+
+
+
 void sleduj_enc(void){
 	static minule=1;	
 	if(GPIO_ReadInputPin(GPIOE,GPIO_PIN_2) == RESET && minule==1){
